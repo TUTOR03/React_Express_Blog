@@ -1,13 +1,13 @@
 import { validationResult } from 'express-validator'
-import fs from 'fs'
+import APIError from '../assets/APIError.js'
 
 const validateBody = (req, res, next) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
-    if (req.file) {
-      fs.unlinkSync(req.file.path)
-    }
-    return res.status(400).json({ errors: errors.array() })
+    // if (req.file) {
+    //   fs.unlinkSync(req.file.path)
+    // }
+    throw APIError.create(400, 'Incorrect data', errors)
   }
   return next()
 }

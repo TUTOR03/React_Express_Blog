@@ -21,18 +21,18 @@ const InvitationSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    default: null
+    default: null,
   },
   creator: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    default: null
-  }
+    default: null,
+  },
 })
 
-InvitationSchema.pre('save', function () {
-  this.code = this.code ? this.code : uuidv4()
-  this.created = this.created ? this.created : new Date().getTime()
-})
+// InvitationSchema.pre('save', function () {
+//   this.code = this.code ? this.code : uuidv4()
+//   this.created = this.created ? this.created : new Date().getTime()
+// })
 
 export default mongoose.model('Invite', InvitationSchema)

@@ -1,32 +1,39 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import morgan from 'morgan'
+import cors from 'cors'
 import { PORT } from './env.js'
-import multer from 'multer'
+import cookieParser from 'cookie-parser'
 
-import adminRouter from './routers/admin.js'
-import articleRouter from './routers/article.js'
-import inviteRouter from './routers/invite.js'
+// app.use('/media', express.static('media'))
+
+// app.use((err, req, res, next) => {
+//   if (err instanceof multer.MulterError) {
+//     return res.status(400).json({
+//       error: 'Wrong file or file is undefined',
+//     })
+//   }
+//   return err && next(err)
+// })
+
+import userRouter from './routers/user.js'
+import errorHandler from './middlewares/ErrorHandler.js'
 
 const app = express()
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
+app.use(cookieParser())
+app.use(cors())
 app.use(morgan('dev'))
 
-app.use('/admin', adminRouter)
-app.use('/article', articleRouter)
-app.use('/invite', inviteRouter)
+app.use('/api', userRouter)
 
-app.use('/media', express.static('media'))
+app.use(errorHandler)
 
-app.use((err, req, res, next) => {
-  if (err instanceof multer.MulterError) {
-    return res.status(400).json({
-      error: 'Wrong file or file is undefined',
-    })
-  }
-  return err && next(err)
+app.use((req, res) => {
+  console.log('404 NOT FOUND')
+  return res.status(404).json({})
 })
 
 mongoose.connect('mongodb://localhost/my_blog', {
@@ -34,10 +41,6 @@ mongoose.connect('mongodb://localhost/my_blog', {
   useUnifiedTopology: true,
   useFindAndModify: false,
   useCreateIndex: true,
-})
-
-app.get('/', (req, res) => {
-  res.json({ data: 'Hello' })
 })
 
 mongoose.connection
