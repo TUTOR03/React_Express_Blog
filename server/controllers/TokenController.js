@@ -36,6 +36,14 @@ class TokenController {
     }
     return await Token.create({ token: refreshToken, user: user.id })
   }
+
+  validate(accessToken) {
+    try {
+      return jwt.verify(accessToken, JWT_ACCESS)
+    } catch (err) {
+      return null
+    }
+  }
 }
 
 export default new TokenController()

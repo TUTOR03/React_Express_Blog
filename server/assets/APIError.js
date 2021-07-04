@@ -12,6 +12,14 @@ class APIError extends Error {
   static unknownError() {
     return new APIError(500, 'Unknown error')
   }
+
+  static unauthorizedAccess() {
+    return new APIError(401, 'Unauthorized user')
+  }
+
+  static lowLevelAccess(){
+    return new APIError(401, 'Low access level')
+  }
 }
 
 export default APIError

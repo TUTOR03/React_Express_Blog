@@ -18,6 +18,8 @@ import cookieParser from 'cookie-parser'
 
 import userRouter from './routers/user.js'
 import errorHandler from './middlewares/ErrorHandler.js'
+import JWTAuth from './middlewares/JWTAuthentication.js'
+import LevelAccess from './middlewares/LevelAcess.js'
 
 const app = express()
 
@@ -29,12 +31,16 @@ app.use(morgan('dev'))
 
 app.use('/api', userRouter)
 
+app.get('/test', JWTAuth, LevelAccess(0), (req, res) => {
+  return res.status(200).json({})
+})
+
 app.use(errorHandler)
 
-app.use((req, res) => {
-  console.log('404 NOT FOUND')
-  return res.status(404).json({})
-})
+// app.use((req, res) => {
+//   console.log('404 NOT FOUND')
+//   return res.status(404).json({})
+// })
 
 mongoose.connect('mongodb://localhost/my_blog', {
   useNewUrlParser: true,
