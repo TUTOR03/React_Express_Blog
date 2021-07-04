@@ -30,9 +30,4 @@ const InvitationSchema = new mongoose.Schema({
   },
 })
 
-// InvitationSchema.pre('save', function () {
-//   this.code = this.code ? this.code : uuidv4()
-//   this.created = this.created ? this.created : new Date().getTime()
-// })
-
 export default mongoose.model('Invite', InvitationSchema)

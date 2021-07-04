@@ -1,4 +1,4 @@
-import APIError from "../assets/APIError.js"
+import APIError from '../assets/APIError.js'
 
 const LevelAccess = (level) => {
   return (req, res, next) => {

@@ -17,6 +17,9 @@ import cookieParser from 'cookie-parser'
 // })
 
 import userRouter from './routers/user.js'
+import tokenRouter from './routers/token.js'
+import inviteRouter from './routers/invite.js'
+
 import errorHandler from './middlewares/ErrorHandler.js'
 import JWTAuth from './middlewares/JWTAuthentication.js'
 import LevelAccess from './middlewares/LevelAcess.js'
@@ -29,9 +32,11 @@ app.use(cookieParser())
 app.use(cors())
 app.use(morgan('dev'))
 
-app.use('/api', userRouter)
+app.use('/user', userRouter)
+app.use('/token', tokenRouter)
+app.use('/invite', inviteRouter)
 
-app.get('/test', JWTAuth, LevelAccess(0), (req, res) => {
+app.get('/test', JWTAuth, LevelAccess(1), (req, res) => {
   return res.status(200).json({})
 })
 

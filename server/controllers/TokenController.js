@@ -1,6 +1,8 @@
 import jwt from 'jsonwebtoken'
+import APIError from '../assets/APIError.js'
 import { JWT_ACCESS, JWT_REFRESH } from '../env.js'
 import Token from '../models/Token.js'
+import User from '../models/User.js'
 
 class TokenController {
   async generate(user) {
@@ -37,12 +39,21 @@ class TokenController {
     return await Token.create({ token: refreshToken, user: user.id })
   }
 
-  validate(accessToken) {
+  validate(accessToken, key) {
     try {
-      return jwt.verify(accessToken, JWT_ACCESS)
+      return jwt.verify(accessToken, key)
     } catch (err) {
       return null
     }
+  }
+
+  async refresh(refreshToken) {
+    const validatedData = this.validate(refreshToken, JWT_REFRESH)
+    if (validatedData) {
+      const user = await User.findOne({ email: validatedData.username })
+      return await this.generate(user)
+    }
+    throw APIError.create(401, 'Invalid refresh token')
   }
 }
 

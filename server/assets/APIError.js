@@ -17,7 +17,7 @@ class APIError extends Error {
     return new APIError(401, 'Unauthorized user')
   }
 
-  static lowLevelAccess(){
+  static lowLevelAccess() {
     return new APIError(401, 'Low access level')
   }
 }

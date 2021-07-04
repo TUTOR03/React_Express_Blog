@@ -46,7 +46,6 @@ router.post(
       })
       return res.status(200).json({ accessToken: tokens.accessToken })
     } catch (err) {
-      console.log(err)
       return next(err)
     }
   }

@@ -1,9 +1,20 @@
 import APIError from '../assets/APIError.js'
 import { INVITE_CODE } from '../env.js'
 import Invite from '../models/Invite.js'
+import { v4 as uuidv4 } from 'uuid'
+import User from '../models/User.js'
 
 class InviteController {
-  async generate() {}
+  async generate(level, username) {
+    const user = await User.findOne({ email: username })
+    const invite = await Invite.create({
+      code: uuidv4(),
+      level,
+      created: new Date().getTime(),
+      creator: user.id,
+    })
+    return invite.code
+  }
 
   async check(invite) {
     await this.checkMain()

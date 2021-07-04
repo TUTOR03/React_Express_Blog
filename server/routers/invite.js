@@ -1,13 +1,37 @@
-// import express from 'express'
-// import { body, param } from 'express-validator'
+import express from 'express'
+import { body, param } from 'express-validator'
 // import LevelAccess from '../middlewares/LevelAcess.js'
-// import JWTAuth from '../middlewares/JWTAuthentication.js'
-// import { BASE_ACCESS_LEVEL } from '../env.js'
-// import validateBody from '../middlewares/CheckValidation.js'
+import JWTAuth from '../middlewares/JWTAuthentication.js'
+import { BASE_ACCESS_LEVEL } from '../env.js'
+import validateBody from '../middlewares/CheckValidation.js'
+import Invitecontroller from '../controllers/Invitecontroller.js'
+import APIError from '../assets/APIError.js'
 // import Invite from '../models/Invitation.js'
 // import User from '../models/User.js'
 
-// const router = express.Router()
+const router = express.Router()
+
+router.post(
+  '/generate',
+  JWTAuth,
+  body('level').exists().notEmpty().isInt({ min: 1, max: BASE_ACCESS_LEVEL }),
+  validateBody,
+  async (req, res, next) => {
+    try {
+      if (req.body.level < req.auth.level) {
+        throw APIError.lowLevelAccess()
+      }
+      const invite = await Invitecontroller.generate(
+        req.body.level,
+        req.auth.username
+      )
+      return res.status(200).json({ invite })
+    } catch (err) {
+			console.log(err)
+      return next(err)
+    }
+  }
+)
 
 // router.post(
 //   '/generate',
@@ -69,4 +93,4 @@
 //   }
 // )
 
-// export default router
+export default router
