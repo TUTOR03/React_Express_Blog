@@ -1,5 +1,4 @@
 import mongoose from 'mongoose'
-import { v4 as uuidv4 } from 'uuid'
 import { BASE_ACCESS_LEVEL } from '../env.js'
 
 const InvitationSchema = new mongoose.Schema({

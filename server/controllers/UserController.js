@@ -1,6 +1,6 @@
 import APIError from '../assets/APIError.js'
 import User from '../models/User.js'
-import Invitecontroller from './Invitecontroller.js'
+import Invitecontroller from './InviteController.js'
 import crypto from 'crypto'
 import { PASS_SECRET } from '../env.js'
 import TokenController from './TokenController.js'

@@ -4,7 +4,7 @@ import { body, param } from 'express-validator'
 import JWTAuth from '../middlewares/JWTAuthentication.js'
 import { BASE_ACCESS_LEVEL } from '../env.js'
 import validateBody from '../middlewares/CheckValidation.js'
-import Invitecontroller from '../controllers/Invitecontroller.js'
+import Invitecontroller from '../controllers/InviteController.js'
 import APIError from '../assets/APIError.js'
 // import Invite from '../models/Invitation.js'
 // import User from '../models/User.js'
@@ -27,7 +27,7 @@ router.post(
       )
       return res.status(200).json({ invite })
     } catch (err) {
-			console.log(err)
+      console.log(err)
       return next(err)
     }
   }

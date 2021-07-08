@@ -5,20 +5,10 @@ import cors from 'cors'
 import { PORT } from './env.js'
 import cookieParser from 'cookie-parser'
 
-// app.use('/media', express.static('media'))
-
-// app.use((err, req, res, next) => {
-//   if (err instanceof multer.MulterError) {
-//     return res.status(400).json({
-//       error: 'Wrong file or file is undefined',
-//     })
-//   }
-//   return err && next(err)
-// })
-
 import userRouter from './routers/user.js'
 import tokenRouter from './routers/token.js'
 import inviteRouter from './routers/invite.js'
+import articleRouter from './routers/article.js'
 
 import errorHandler from './middlewares/ErrorHandler.js'
 import JWTAuth from './middlewares/JWTAuthentication.js'
@@ -32,9 +22,12 @@ app.use(cookieParser())
 app.use(cors())
 app.use(morgan('dev'))
 
+app.use('/media', express.static('media'))
+
 app.use('/user', userRouter)
 app.use('/token', tokenRouter)
 app.use('/invite', inviteRouter)
+app.use('/article', articleRouter)
 
 app.get('/test', JWTAuth, LevelAccess(1), (req, res) => {
   return res.status(200).json({})
@@ -42,10 +35,10 @@ app.get('/test', JWTAuth, LevelAccess(1), (req, res) => {
 
 app.use(errorHandler)
 
-// app.use((req, res) => {
-//   console.log('404 NOT FOUND')
-//   return res.status(404).json({})
-// })
+app.use((req, res) => {
+  console.log('404 NOT FOUND')
+  return res.status(404).json({})
+})
 
 mongoose.connect('mongodb://localhost/my_blog', {
   useNewUrlParser: true,

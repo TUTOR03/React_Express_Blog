@@ -1,5 +1,6 @@
 import multer from 'multer'
 import path from 'path'
+import { v4 as uuidv4 } from 'uuid'
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -9,7 +10,7 @@ const storage = multer.diskStorage({
     const extension = file.originalname.split('.')
     cb(
       null,
-      `${file.fieldname}-${new Date().getTime()}.${
+      `${file.fieldname}-${uuidv4()}-${new Date().getTime()}.${
         extension[extension.length - 1]
       }`
     )

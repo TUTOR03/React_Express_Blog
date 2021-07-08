@@ -1,13 +1,40 @@
-// import express from 'express'
-// import { body, query, param } from 'express-validator'
-// import Article from '../models/Article.js'
-// import JWTAuth from '../middlewares/JWTAuthentication.js'
-// import validateBody from '../middlewares/CheckValidation.js'
-// import fileUpload from '../middlewares/FileUpload.js'
-// import validateSlug from '../middlewares/CheckArticleExists.js'
-// import fs from 'fs'
+import express from 'express'
+import { body, query, param } from 'express-validator'
+import Article from '../models/Article.js'
+import JWTAuth from '../middlewares/JWTAuthentication.js'
+import validateBody from '../middlewares/CheckValidation.js'
+import fileUpload from '../middlewares/FileUpload.js'
+import validateSlug from '../middlewares/CheckArticleExists.js'
+import ArticleController from '../controllers/ArticleController.js'
 
-// const router = express.Router()
+const router = express.Router()
+
+router.post(
+  '/create',
+  fileUpload.single('img'),
+  body('title').exists().notEmpty().trim().escape(),
+  body('description').exists().trim().escape(),
+  body('markdown').exists().trim().escape(),
+  body('short').exists().isBoolean(),
+  body('hashtag').exists().trim().escape(),
+  validateBody,
+  async (req, res, next) => {
+    const { title, description, markdown, short, hashtag } = req.body
+    try {
+      const article = await ArticleController.create(
+        title,
+        description,
+        markdown,
+        short,
+        hashtag,
+        req.file
+      )
+      return res.status(200).json(article)
+    } catch (err) {
+      return next(err)
+    }
+  }
+)
 
 // router.post(
 //   '/',
@@ -125,4 +152,4 @@
 //   }
 // )
 
-// export default router
+export default router

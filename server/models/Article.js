@@ -12,10 +12,15 @@ const ArticleSchema = new mongoose.Schema({
   },
   markdown: {
     type: String,
-    required: true,
   },
   created: {
     type: Number,
+  },
+  short: {
+    type: Boolean,
+  },
+  hashtag: {
+    type: [String],
   },
   img: {
     type: String,
