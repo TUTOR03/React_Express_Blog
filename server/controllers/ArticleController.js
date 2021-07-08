@@ -5,7 +5,7 @@ import slugify from 'slugify'
 
 class Articlecontroller {
   async create(title, description, markdown, short, hashtag, file) {
-    if (await Article.exists()) {
+    if (await this.exists({ title })) {
       if (file) {
         fs.unlinkSync(file.path)
       }
@@ -27,6 +27,25 @@ class Articlecontroller {
         img: file ? file.path : '',
       })
     )
+  }
+
+  async list(page, perOne) {
+    return (
+      await Article.find({}, null, { sort: { created: -1 } })
+        .skip(perOne * (page - 1))
+        .limit(perOne)
+    ).map((ob) => this.forResponse(ob, true))
+  }
+
+  async single(slug) {
+    if (!(await this.exists({ slug }))) {
+      throw APIError.create(404, "Article doesn't exist")
+    }
+    return this.forResponse(await Article.findOne({ slug }))
+  }
+
+  async exists(params) {
+    return await Article.exists(params)
   }
 
   forResponse(article, list = false) {

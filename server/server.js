@@ -37,7 +37,7 @@ app.use(errorHandler)
 
 app.use((req, res) => {
   console.log('404 NOT FOUND')
-  return res.status(404).json({ Hello: 'GOooooooo' })
+  return res.status(404).json()
 })
 
 mongoose.connect('mongodb://localhost/my_blog', {
