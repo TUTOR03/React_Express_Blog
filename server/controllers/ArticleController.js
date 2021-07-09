@@ -29,6 +29,32 @@ class Articlecontroller {
     )
   }
 
+  async update(slug, data, file) {
+    console.log(file)
+    if (!(await this.exists({ slug }))) {
+      throw APIError.create(404, "Article doesn't exist")
+    }
+    const article = await Article.findOne({ slug })
+    if (
+      (await this.exists({ title: data.title })) &&
+      data.title != article.title
+    ) {
+      if (file) {
+        fs.unlinkSync(file.path)
+      }
+      throw APIError.create(400, 'Article with this title already exists')
+    }
+    if (file && article.img) {
+      fs.unlinkSync(article.img)
+    }
+    data.slug = slugify(data.title, {
+      replacement: '_',
+      lower: true,
+    })
+    await Article.updateOne({ slug }, { ...data, img: file ? file.path : '' })
+    return this.forResponse(await Article.findOne({ slug: data.slug }))
+  }
+
   async list(page, perOne) {
     return (
       await Article.find({}, null, { sort: { created: -1 } })
@@ -42,6 +68,17 @@ class Articlecontroller {
       throw APIError.create(404, "Article doesn't exist")
     }
     return this.forResponse(await Article.findOne({ slug }))
+  }
+
+  async delete(slug) {
+    if (!(await this.exists({ slug }))) {
+      throw APIError.create(404, "Article doesn't exist")
+    }
+    const article = Article.findOne({ slug })
+    if (article.img) {
+      fs.unlinkSync(article.img)
+    }
+    await Article.deleteOne({ slug })
   }
 
   async exists(params) {
