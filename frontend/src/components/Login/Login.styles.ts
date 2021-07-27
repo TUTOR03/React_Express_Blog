@@ -55,6 +55,11 @@ export const CardInput = styled.input`
         bottom: calc(0.25em + 3px);
         font-size: 1.25em;
     }
+
+    &.custom:focus ~ label{
+        bottom: calc(2.15em + 3px);
+        font-size:1em;
+    }
 `
 
 export const CardInputLabel = styled.label`
@@ -71,7 +76,7 @@ export const CardButton = styled.button`
     appearance: none;
     cursor: pointer;
     font-size:1.25em;
-    
+
     &.custom{
         background-color: ${MAIN};
         color: ${WHITE};
